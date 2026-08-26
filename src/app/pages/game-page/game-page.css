@@ -1,0 +1,103 @@
+:host {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
+.game-page {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+
+  flex-direction: column;
+  gap: 16px;
+
+  padding: 24px;
+}
+
+.game-page-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  min-height: 40px;
+}
+
+.game-page-header h2 {
+  margin: 0;
+}
+
+.back-button {
+  min-width: 90px;
+}
+
+.game-content {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+
+  gap: 20px;
+}
+
+.game-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  width: 230px;
+  flex-shrink: 0;
+}
+
+.game-board-area {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  background: #fff;
+}
+
+@media (max-width: 850px) {
+  .game-page {
+    padding: 18px;
+  }
+
+  .game-content {
+    flex-direction: column;
+  }
+
+  .game-sidebar {
+    width: 100%;
+  }
+
+  .game-board-area {
+    min-height: 420px;
+  }
+}
+
+@media (max-width: 560px) {
+  .game-page {
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .game-page-header {
+    gap: 10px;
+  }
+
+  .game-content {
+    gap: 14px;
+  }
+
+  .game-board-area {
+    min-height: 340px;
+  }
+}

@@ -1,0 +1,25 @@
+<div class="game-panel game-page">
+
+  <div class="game-page-header">
+    <button routerLink="/"
+            class="back-button">
+      <i class="bi bi-arrow-left"></i> Back
+    </button>
+    @if (gameType) {
+      <h2>{{gameType.displayName}}</h2>
+    }
+  </div>
+
+  <div class="game-content">
+
+    <aside class="game-sidebar">
+      <!-- opcje gry -->
+    </aside>
+
+    <section class="game-board-area">
+      <!-- plansza / układanka -->
+    </section>
+
+  </div>
+
+</div>

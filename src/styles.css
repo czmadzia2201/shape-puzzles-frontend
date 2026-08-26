@@ -1,1 +1,91 @@
-/* You can add global styles to this file, and also import other style files */
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  background: #f6f7f9;
+  color: #222;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  line-height: 1.1;
+  color: #666;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+h1 {
+  font-size: 20px;
+}
+
+h2 {
+  font-size: 16px;
+}
+
+h3 {
+  font-size: 12px;
+}
+
+button {
+  padding: 8px 12px;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  background: #fff;
+  color: #222;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  background: #f0f0f0;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.game-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  width: 100%;
+  max-width: 1300px;
+  min-height: 100vh;
+
+  margin: 0 auto;
+  padding: 18px;
+}
+
+.header-panel,
+.game-panel {
+  width: 100%;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 14px;
+}
+
+.game-panel {
+  flex: 1;
+  min-height: 0;
+}
+
+@media (max-width: 560px) {
+  .game-layout {
+    gap: 12px;
+    padding: 10px;
+  }
+}

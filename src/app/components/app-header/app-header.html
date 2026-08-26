@@ -1,0 +1,16 @@
+<div class="header-panel app-header">
+  <h1>Shape Puzzles</h1>
+
+  <div class="header-actions">
+    @if (username) {
+      <span class="username">Hello {{username}}!</span>
+      <button type="button">Logout</button>
+      <button type="button">User settings</button>
+    } @else {
+      <span class="username">Hello guest!</span>
+      <button type="button">Login</button>
+      <button type="button">Register</button>
+    }
+  </div>
+
+</div>

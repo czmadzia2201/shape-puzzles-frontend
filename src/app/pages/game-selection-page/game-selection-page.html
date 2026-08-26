@@ -1,0 +1,28 @@
+<div class="game-panel selection-page">
+
+  <h2>Choose game type</h2>
+
+  <div class="game-type-list">
+    @for (gameType of gameTypes; track gameType) {
+      <a class="game-type-button"
+         [routerLink]="['/', gameType.name]">
+        <div class="game-type-icon">
+          <img
+            [src]="'puzzle-icons/' + gameType.name + '-min.png'"
+            [alt]="gameType.displayName"
+          >
+        </div>
+        <span class="game-type-name">
+          {{ gameType.displayName }}
+        </span>
+
+        <i class="bi bi-chevron-right"></i>
+      </a>
+    }
+  </div>
+
+  <button class="about-button" type="button">
+    <i class="bi bi-info-circle"></i> About the Game
+  </button>
+
+</div>
