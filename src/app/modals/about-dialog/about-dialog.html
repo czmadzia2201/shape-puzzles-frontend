@@ -1,0 +1,37 @@
+<dialog #dialog>
+
+  <div class="dialog-backdrop">
+    <div class="dialog-window about-dialog">
+      <h1>Shape Puzzles</h1>
+
+      <p>This application is a collection of geometric, Tangram-like puzzle games
+        in which a set of simple pieces is used to create different shapes and figures.</p>
+
+      <p>All of these games are based on the same idea: the rules and objective remain the same,
+        but each game has its own unique set of pieces and different shapes to recreate.</p>
+
+      <p>Shape Puzzles brings a selection of these games together in one place,
+        from the well-known Tangram to less familiar puzzles and variants.</p>
+
+      <p><strong>How to play</strong></p>
+
+      <ul>
+        <li>On the main page, you can choose between several different game types. Click on a game tile to go to the corresponding game page.</li>
+        <li>Choose a task by clicking a shape thumbnail in the gray panel at the bottom. The full-sized shape will be displayed in the main gray area.</li>
+        <li>Drag and drop the pieces using the mouse. Use the arrow keys to rotate and flip them.</li>
+        <li>Thumbnails of solved puzzles are grayed out. You can select a solved puzzle to play it again.</li>
+        <li>If you are using your user profile, the puzzles you solve will be saved automatically.</li>
+        <li>If you play anonymously, solved puzzles will be saved only in your browser storage. Once the browser data is cleared, your game history will be lost.</li>
+        <li>If you choose to log in or register after solving some puzzles anonymously, they will be automatically added to the solved puzzles in your user profile. </li>
+      </ul>
+
+      <div class="dialog-actions">
+        <button type="button"
+                class="dialog-button confirm-button"
+                (click)="close()">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</dialog>

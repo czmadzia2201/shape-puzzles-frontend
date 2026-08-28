@@ -21,8 +21,11 @@
     }
   </div>
 
-  <button class="about-button" type="button">
+  <button class="about-button" type="button"
+          (click)="aboutDialog.open()">
     <i class="bi bi-info-circle"></i> About the Game
   </button>
 
 </div>
+
+<app-about-dialog #aboutDialog></app-about-dialog>

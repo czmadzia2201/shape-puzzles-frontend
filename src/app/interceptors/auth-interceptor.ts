@@ -33,7 +33,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       const refreshToken = authService.getRefreshToken();
 
       if (!refreshToken) {
-        authService.clearTokens();
+        authService.clearStorageData();
         return throwError(() => error);
       }
 
@@ -48,7 +48,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           return next(retriedRequest);
         }),
         catchError(refreshError => {
-          authService.clearTokens();
+          authService.clearStorageData();
           return throwError(() => refreshError);
         })
       );

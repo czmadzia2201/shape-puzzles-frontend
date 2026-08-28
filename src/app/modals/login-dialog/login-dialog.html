@@ -1,0 +1,56 @@
+<dialog #dialog>
+
+  <div class="dialog-backdrop">
+    <div class="dialog-window auth-dialog">
+      <h2>Login</h2>
+
+      <form class="dialog-form"
+            #loginForm="ngForm"
+            (ngSubmit)="sendLoginRequest()">
+
+        <div class="form-field">
+          <label>Username</label>
+          <input
+            type="text"
+            name="username"
+            [(ngModel)]="loginRequest.username"
+            #username="ngModel"
+            required
+          >
+        </div>
+
+        <div class="form-field">
+          <label>Password</label>
+          <input
+            type="password"
+            name="password"
+            [(ngModel)]="loginRequest.password"
+            #password="ngModel"
+            required
+          >
+        </div>
+
+        @if (loginError) {
+        <div class="form-error">
+          {{ loginError }}
+        </div>
+        }
+
+        <div class="dialog-actions">
+          <button type="submit"
+                  class="dialog-button confirm-button"
+                  [disabled]="loginForm.invalid">
+            OK
+          </button>
+
+          <button type="button"
+                  class="dialog-button"
+                  (click)="close()">
+            Cancel
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</dialog>

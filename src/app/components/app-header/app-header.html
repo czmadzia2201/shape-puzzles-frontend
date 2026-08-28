@@ -1,16 +1,21 @@
 <div class="header-panel app-header">
   <h1>Shape Puzzles</h1>
-
   <div class="header-actions">
-    @if (username) {
-      <span class="username">Hello {{username}}!</span>
-      <button type="button">Logout</button>
-      <button type="button">User settings</button>
+    @if (username()) {
+      <span class="username">Hello {{ username() }}!</span>
+      <button type="button" (click)="logoutDialog.open()">Logout</button>
+      <button type="button" (click)="unregisterDialog.open()">Delete account</button>
     } @else {
       <span class="username">Hello guest!</span>
-      <button type="button">Login</button>
-      <button type="button">Register</button>
+      <button type="button" (click)="loginDialog.open()">Login</button>
+      <button type="button" (click)="registerDialog.open()">Register</button>
     }
   </div>
 
+
 </div>
+
+<app-login-dialog #loginDialog></app-login-dialog>
+<app-logout-dialog #logoutDialog></app-logout-dialog>
+<app-unregister-dialog #unregisterDialog></app-unregister-dialog>
+<app-register-dialog #registerDialog></app-register-dialog>

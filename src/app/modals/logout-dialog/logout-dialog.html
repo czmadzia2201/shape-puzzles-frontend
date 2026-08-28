@@ -1,0 +1,25 @@
+<dialog #dialog>
+
+  <div class="dialog-backdrop">
+    <div class="dialog-window auth-dialog">
+      <h2>Logout</h2>
+
+        <p>Are you sure you want to log out?</p>
+
+        <div class="dialog-actions">
+          <button type="button"
+                  class="dialog-button confirm-button"
+                  (click)="logout()">
+            OK
+          </button>
+
+          <button type="button"
+                  class="dialog-button"
+                  (click)="close()">
+            Cancel
+          </button>
+        </div>
+
+    </div>
+  </div>
+</dialog>

@@ -1,0 +1,134 @@
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+  box-sizing: border-box;
+
+  background: rgb(0 0 0 / 35%);
+}
+
+.dialog-window {
+  padding: 24px;
+   box-sizing: border-box;
+
+  border: 1px solid #ddd;
+  border-radius: 14px;
+  background: #fff;
+
+  box-shadow: 0 16px 45px rgb(0 0 0 / 18%);
+}
+
+.auth-dialog {
+  width: min(100%, 460px);
+}
+
+.about-dialog {
+  width: min(100%, 800px);
+}
+
+p, li {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+p {
+  margin-top: 10px;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.dialog-button {
+  min-width: 100px;
+  padding: 8px 14px;
+
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  background: #fff;
+
+  cursor: pointer;
+}
+
+.dialog-button:hover {
+  background: #f0f0f0;
+}
+
+.confirm-button {
+  border-color: #2e7d32;
+  background: #eef8ee;
+  color: #256429;
+}
+
+.confirm-button:hover {
+  background: #e2f2e2;
+}
+
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+}
+
+.form-field input {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 9px 11px;
+
+  border: 1px solid #bbb;
+  border-radius: 6px;
+
+  background: #fff;
+  color: #222;
+  font-size: 15px;
+}
+
+.form-field input:focus {
+  outline: none;
+  border-color: #7da977;
+  box-shadow: 0 0 0 2px rgba(125, 169, 119, 0.15);
+}
+
+.form-error {
+  margin: 0;
+  font-size: 14px;
+  color: #b3261e;
+}
+
+@media (max-width: 560px) {
+  .dialog-window {
+    padding: 20px;
+  }
+
+  .dialog-actions {
+    flex-direction: column-reverse;
+  }
+
+  .dialog-button {
+    width: 100%;
+  }
+}

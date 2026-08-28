@@ -1,0 +1,79 @@
+<dialog #dialog>
+
+  <div class="dialog-backdrop">
+    <div class="dialog-window auth-dialog">
+      <h2>Register account</h2>
+
+      <form class="dialog-form"
+            #registerForm="ngForm"
+            (ngSubmit)="sendRegisterRequest()">
+
+        <div class="form-field">
+          <label>Username</label>
+          <input
+            type="text"
+            name="username"
+            [(ngModel)]="registerRequest.username"
+            #username="ngModel"
+            required
+            minlength="3"
+            maxlength="25"
+          >
+          @if (username.touched && username.errors?.['minlength']) {
+          <p class="form-error">
+            Username must contain at least 3 characters.
+          </p>
+          }
+        </div>
+
+        <div class="form-field">
+          <label>Password</label>
+          <input
+            type="password"
+            name="password"
+            [(ngModel)]="registerRequest.password"
+            #password="ngModel"
+            required
+          >
+        </div>
+
+        <div class="form-field">
+          <label>Repeat password</label>
+          <input
+            type="password"
+            name="repeatPassword"
+            [(ngModel)]="repeatPassword"
+            #repeatPasswordModel="ngModel"
+            required
+          >
+          @if (repeatPasswordModel.touched && repeatPassword &&
+          repeatPassword !== registerRequest.password
+          ) {
+            <p class="form-error">Passwords do not match.</p>
+          }
+        </div>
+
+        @if (registerError) {
+        <div class="form-error">
+          {{ registerError }}
+        </div>
+        }
+
+        <div class="dialog-actions">
+          <button type="submit"
+                  class="dialog-button confirm-button"
+                  [disabled]="registerForm.invalid || repeatPassword !== registerRequest.password">
+            OK
+          </button>
+
+          <button type="button"
+                  class="dialog-button"
+                  (click)="close()">
+            Cancel
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</dialog>

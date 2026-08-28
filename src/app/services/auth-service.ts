@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 
@@ -10,6 +10,10 @@ import { RefreshRequest, RefreshResponse } from '../models/refresh';
 })
 export class AuthService {
 
+  readonly username = signal<string | null>(
+    localStorage.getItem('username')
+  );
+
   private readonly apiUrl = 'http://localhost:8080/shape-puzzles/auth';
 
   constructor(private readonly http: HttpClient) {}
@@ -19,6 +23,7 @@ export class AuthService {
      tap(response => {
        localStorage.setItem('accessToken', response.accessToken);
        localStorage.setItem('refreshToken', response.refreshToken);
+       this.setLoggedInUser(request.username);
      })
     );
   }
@@ -39,9 +44,16 @@ export class AuthService {
     return localStorage.getItem('refreshToken');
   }
 
-  clearTokens(): void {
+  clearStorageData(): void {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('username');
+    this.username.set(null);
+  }
+
+  setLoggedInUser(username: string): void {
+    localStorage.setItem('username', username);
+    this.username.set(username);
   }
 
 }
