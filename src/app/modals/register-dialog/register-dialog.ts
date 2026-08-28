@@ -20,6 +20,10 @@ export class RegisterDialog {
   registerError: string | null = null;
   repeatPassword: string = '';
 
+  usernameAvailable: boolean | null = null;
+  checkingUsername = false;
+  private usernameCheckTimeout?: ReturnType<typeof setTimeout>;
+
   open(): void {
     this.dialog.nativeElement.showModal();
   }
@@ -49,4 +53,32 @@ export class RegisterDialog {
       }
     });
   }
+
+  onUsernameChange(username: string): void {
+    this.usernameAvailable = null;
+
+    if (this.usernameCheckTimeout) {
+      clearTimeout(this.usernameCheckTimeout);
+    }
+
+    if (username.length < 3) {
+      return;
+    }
+
+    this.usernameCheckTimeout = setTimeout(() => {
+      this.checkingUsername = true;
+
+      this.userService.isUsernameAvailable(username).subscribe({
+        next: available => {
+          this.usernameAvailable = available;
+          this.checkingUsername = false;
+        },
+        error: () => {
+          this.usernameAvailable = null;
+          this.checkingUsername = false;
+        }
+      });
+    }, 400);
+  }
+
 }

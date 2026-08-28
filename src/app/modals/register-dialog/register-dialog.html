@@ -18,10 +18,17 @@
             required
             minlength="3"
             maxlength="25"
+            (ngModelChange)="onUsernameChange($event)"
           >
           @if (username.touched && username.errors?.['minlength']) {
           <p class="form-error">
             Username must contain at least 3 characters.
+          </p>
+          }
+
+          @if (usernameAvailable === false) {
+          <p class="form-error">
+            Username is already taken.
           </p>
           }
         </div>
@@ -62,7 +69,9 @@
         <div class="dialog-actions">
           <button type="submit"
                   class="dialog-button confirm-button"
-                  [disabled]="registerForm.invalid || repeatPassword !== registerRequest.password">
+                  [disabled]="registerForm.invalid ||
+                              repeatPassword !== registerRequest.password ||
+                              usernameAvailable !== true">
             OK
           </button>
 

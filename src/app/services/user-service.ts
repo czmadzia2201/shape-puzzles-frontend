@@ -23,4 +23,9 @@ export class UserService {
     return this.http.delete<void>(`${this.apiUrl}/me`);
   }
 
+  isUsernameAvailable(username: string): Observable<boolean> {
+    const params = new HttpParams().set('username', username);
+    return this.http.get<boolean>(this.apiUrl, { params });
+  }
+
 }
