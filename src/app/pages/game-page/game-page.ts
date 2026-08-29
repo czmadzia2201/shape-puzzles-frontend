@@ -16,12 +16,18 @@ export class GamePage {
 
   gameTypeName: string | null = null;
   gameType: GameType | null = null;
+  errorMessage: string | null = null;
 
   ngOnInit(): void {
     this.gameTypeName = this.route.snapshot.paramMap.get('name');
     if (this.gameTypeName) {
-      this.gameService.getGameType(this.gameTypeName).subscribe(response => {
-        this.gameType = response;
+      this.gameService.getGameType(this.gameTypeName).subscribe({
+        next: response => {
+          this.gameType = response;
+        },
+        error: error => {
+          this.errorMessage = error.error.message;
+        }
       });
     }
   }

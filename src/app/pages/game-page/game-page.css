@@ -83,6 +83,30 @@
   }
 }
 
+.game-error {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  text-align: center;
+}
+
+.game-error-code {
+  font-size:52px;
+  font-weight: 600;
+  line-height: 1;
+  color: #888;
+}
+
+.game-error-message {
+  margin: 0;
+  font-size: 20px;
+  color: #888;
+}
+
 @media (max-width: 560px) {
   .game-page {
     gap: 12px;

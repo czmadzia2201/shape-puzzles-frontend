@@ -30,7 +30,15 @@ export class RegisterDialog {
 
   close(): void {
     this.registerRequest = this.createEmptyRegisterRequest();
+    this.repeatPassword = '';
     this.registerError = null;
+    this.usernameAvailable = null;
+    this.checkingUsername = false;
+  
+    if (this.usernameCheckTimeout) {
+      clearTimeout(this.usernameCheckTimeout);
+      this.usernameCheckTimeout = undefined;
+    }
     this.dialog.nativeElement.close();
   }
 

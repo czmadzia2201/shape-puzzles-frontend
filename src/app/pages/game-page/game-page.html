@@ -5,21 +5,28 @@
             class="back-button">
       <i class="bi bi-arrow-left"></i> Back
     </button>
-    @if (gameType) {
-      <h2>{{gameType.displayName}}</h2>
-    }
   </div>
 
-  <div class="game-content">
-
-    <aside class="game-sidebar">
-      <!-- opcje gry -->
-    </aside>
-
-    <section class="game-board-area">
-      <!-- plansza / układanka -->
-    </section>
-
+  @if (errorMessage) {
+  <div class="game-error">
+    <div class="game-error-code">404</div>
+    <p class="game-error-message">{{ errorMessage }}</p>
   </div>
+  }
+
+  @if (gameType) {
+    <h2>{{gameType.displayName}}</h2>
+    <div class="game-content">
+
+      <aside class="game-sidebar">
+        <!-- opcje gry -->
+      </aside>
+
+      <section class="game-board-area">
+        <!-- plansza / układanka -->
+      </section>
+
+    </div>
+  }
 
 </div>
