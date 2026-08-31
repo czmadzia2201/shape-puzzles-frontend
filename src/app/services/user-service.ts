@@ -3,6 +3,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { RegisterUserRequest, RegisterUserResponse } from '../models/register';
+import { SyncSolvedTasksRequest } from '../models/sync-solved-tasks';
+import { Task } from '../models/task';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +32,18 @@ export class UserService {
   isUsernameAvailable(username: string): Observable<boolean> {
     const params = new HttpParams().set('username', username);
     return this.http.get<boolean>(this.apiUrl, { params });
+  }
+
+  validateAndSaveSolution(taskId: string): Observable<boolean> {
+    return this.http.post<boolean>(`${this.apiUrl}/solved-tasks/${taskId}`, {});
+  }
+
+  findUserSolvedTasks(gameTypeName: string): Observable<Task[]> {
+    return this.http.get<Task[]>(`${this.apiUrl}/me/solved-tasks/${gameTypeName}`);
+  }
+
+  syncSolvedTasks(request: SyncSolvedTasksRequest): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/me/solved-tasks/sync`, request);
   }
 
 }

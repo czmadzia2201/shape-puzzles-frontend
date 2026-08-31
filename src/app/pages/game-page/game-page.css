@@ -107,6 +107,10 @@
   color: #888;
 }
 
+button.solved {
+  background: lightgreen;
+}
+
 @media (max-width: 560px) {
   .game-page {
     gap: 12px;

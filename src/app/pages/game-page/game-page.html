@@ -16,13 +16,30 @@
 
   @if (gameType) {
     <h2>{{gameType.displayName}}</h2>
+
     <div class="game-content">
 
       <aside class="game-sidebar">
+        <!-- temp start -->
+        @for (task of gameType.tasks; track task) {
+          <button (click)="setSelectedTask(task)"
+                  [class.solved]="isUserSolvedTask(task)"
+          >
+            {{ task.id }}
+          </button>
+        }
+        <button (click)="markAsSolved()">Mark as solved</button>
+        <!-- temp end -->
+
         <!-- opcje gry -->
       </aside>
 
       <section class="game-board-area">
+        <!-- temp start -->
+        @if(selectedTask) {
+          <p>{{selectedTask.id}}</p>
+        }
+        <!-- temp end -->
         <!-- plansza / układanka -->
       </section>
 

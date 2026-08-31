@@ -1,6 +1,8 @@
 import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user-service';
+import { GuestProgressService } from '../../services/guest-progress-service';
+import { SyncSolvedTasksRequest } from '../../models/sync-solved-tasks'
 import { RegisterUserRequest } from '../../models/register'
 
 @Component({
@@ -15,6 +17,7 @@ export class RegisterDialog {
   dialog!: ElementRef<HTMLDialogElement>;
 
   private readonly userService = inject(UserService);
+  private readonly guestProgressService = inject(GuestProgressService);
 
   registerRequest: RegisterUserRequest = this.createEmptyRegisterRequest();
   registerError: string | null = null;
@@ -34,7 +37,7 @@ export class RegisterDialog {
     this.registerError = null;
     this.usernameAvailable = null;
     this.checkingUsername = false;
-  
+
     if (this.usernameCheckTimeout) {
       clearTimeout(this.usernameCheckTimeout);
       this.usernameCheckTimeout = undefined;
@@ -54,6 +57,7 @@ export class RegisterDialog {
 
     this.userService.register(this.registerRequest).subscribe({
       next: response => {
+        this.syncSolvedTasks();
         this.close();
       },
       error: error => {
@@ -87,6 +91,18 @@ export class RegisterDialog {
         }
       });
     }, 400);
+  }
+
+  syncSolvedTasks() {
+    const solvedTasks = this.guestProgressService.getSolvedTasks();
+    if (solvedTasks.size > 0) {
+      const request: SyncSolvedTasksRequest = {
+        taskIds: [...solvedTasks]
+      };
+      this.userService.syncSolvedTasks(request).subscribe(() => {
+        this.guestProgressService.clearSolvedTasks();
+      });
+    }
   }
 
 }
