@@ -47,7 +47,6 @@ export class LoginDialog {
     this.authService.login(this.loginRequest).subscribe({
       next: response => {
         this.syncSolvedTasks();
-        this.close();
       },
       error: error => {
         this.loginError = 'Invalid username or password.';
@@ -57,14 +56,23 @@ export class LoginDialog {
 
   syncSolvedTasks() {
     const solvedTasks = this.guestProgressService.getSolvedTasks();
-    if (solvedTasks.size > 0) {
-      const request: SyncSolvedTasksRequest = {
-        taskIds: [...solvedTasks]
-      };
-      this.userService.syncSolvedTasks(request).subscribe(() => {
-        this.guestProgressService.clearSolvedTasks();
-      });
+    if (solvedTasks.size === 0) {
+      this.close();
+      return;
     }
+    const request: SyncSolvedTasksRequest = {
+      taskIds: [...solvedTasks]
+    };
+    this.userService.syncSolvedTasks(request).subscribe({
+      next: () => {
+        this.guestProgressService.clearSolvedTasks();
+        this.close();
+      },
+      error: error => {
+        this.authService.clearStorageData();
+        this.loginError = 'Error syncing solved tasks. Could not complete login. Try again.';
+      }
+    });
   }
 
 }

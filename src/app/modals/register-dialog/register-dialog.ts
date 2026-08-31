@@ -1,5 +1,6 @@
 import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth-service';
 import { UserService } from '../../services/user-service';
 import { GuestProgressService } from '../../services/guest-progress-service';
 import { SyncSolvedTasksRequest } from '../../models/sync-solved-tasks'
@@ -16,6 +17,7 @@ export class RegisterDialog {
   @ViewChild('dialog')
   dialog!: ElementRef<HTMLDialogElement>;
 
+  private readonly authService = inject(AuthService);
   private readonly userService = inject(UserService);
   private readonly guestProgressService = inject(GuestProgressService);
 
@@ -58,7 +60,6 @@ export class RegisterDialog {
     this.userService.register(this.registerRequest).subscribe({
       next: response => {
         this.syncSolvedTasks();
-        this.close();
       },
       error: error => {
         this.registerError = 'Register error. Please try again.';
@@ -95,14 +96,23 @@ export class RegisterDialog {
 
   syncSolvedTasks() {
     const solvedTasks = this.guestProgressService.getSolvedTasks();
-    if (solvedTasks.size > 0) {
-      const request: SyncSolvedTasksRequest = {
-        taskIds: [...solvedTasks]
-      };
-      this.userService.syncSolvedTasks(request).subscribe(() => {
-        this.guestProgressService.clearSolvedTasks();
-      });
+    if (solvedTasks.size === 0) {
+      this.close();
+      return;
     }
+    const request: SyncSolvedTasksRequest = {
+      taskIds: [...solvedTasks]
+    };
+    this.userService.syncSolvedTasks(request).subscribe({
+      next: () => {
+        this.guestProgressService.clearSolvedTasks();
+        this.close();
+      },
+      error: error => {
+        this.authService.clearStorageData();
+        this.registerError = 'Error syncing solved tasks. Your account was created successfully. Use Login button to log in.';
+      }
+    });
   }
 
 }
