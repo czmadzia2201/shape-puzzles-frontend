@@ -1,4 +1,5 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, effect, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../services/auth-service';
@@ -17,6 +18,7 @@ import { Task } from '../../models/task';
 })
 export class GamePage {
   private route = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly gameService = inject(GameService);
   private readonly userService = inject(UserService);
   private readonly authService = inject(AuthService);
@@ -31,14 +33,18 @@ export class GamePage {
 
   constructor() {
     effect(() => {
-      this.username();
-      if (this.gameType) {
+      const username = this.username();
+      if (!username && this.gameType) {
         this.loadSolvedTasks();
       }
     });
   }
 
   ngOnInit(): void {
+    this.userService.solvedTasksChanged$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.loadSolvedTasks());
+
     this.gameTypeName = this.route.snapshot.paramMap.get('name');
     if (this.gameTypeName) {
       this.gameService.getGameType(this.gameTypeName).subscribe({

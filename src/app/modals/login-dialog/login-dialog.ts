@@ -57,6 +57,7 @@ export class LoginDialog {
   syncSolvedTasks() {
     const solvedTasks = this.guestProgressService.getSolvedTasks();
     if (solvedTasks.size === 0) {
+      this.userService.notifySolvedTasksChanged();
       this.close();
       return;
     }
@@ -66,6 +67,7 @@ export class LoginDialog {
     this.userService.syncSolvedTasks(request).subscribe({
       next: () => {
         this.guestProgressService.clearSolvedTasks();
+        this.userService.notifySolvedTasksChanged();
         this.close();
       },
       error: error => {

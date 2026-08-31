@@ -97,6 +97,7 @@ export class RegisterDialog {
   syncSolvedTasks() {
     const solvedTasks = this.guestProgressService.getSolvedTasks();
     if (solvedTasks.size === 0) {
+      this.userService.notifySolvedTasksChanged();
       this.close();
       return;
     }
@@ -106,6 +107,7 @@ export class RegisterDialog {
     this.userService.syncSolvedTasks(request).subscribe({
       next: () => {
         this.guestProgressService.clearSolvedTasks();
+        this.userService.notifySolvedTasksChanged();
         this.close();
       },
       error: error => {

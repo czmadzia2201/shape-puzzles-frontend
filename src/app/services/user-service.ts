@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 import { RegisterUserRequest, RegisterUserResponse } from '../models/register';
 import { SyncSolvedTasksRequest } from '../models/sync-solved-tasks';
@@ -10,6 +10,9 @@ import { Task } from '../models/task';
   providedIn: 'root',
 })
 export class UserService {
+
+  private solvedTasksChanged = new Subject<void>();
+  solvedTasksChanged$ = this.solvedTasksChanged.asObservable();
 
   private readonly apiUrl = 'http://localhost:8080/shape-puzzles/users';
 
@@ -44,6 +47,10 @@ export class UserService {
 
   syncSolvedTasks(request: SyncSolvedTasksRequest): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/me/solved-tasks/sync`, request);
+  }
+
+  notifySolvedTasksChanged(): void {
+    this.solvedTasksChanged.next();
   }
 
 }
