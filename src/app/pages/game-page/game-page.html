@@ -1,10 +1,13 @@
 <div class="game-panel game-page">
 
   <div class="game-page-header">
-    <button routerLink="/"
-            class="back-button">
+    <button routerLink="/" class="back-button">
       <i class="bi bi-arrow-left"></i> Back
     </button>
+
+    @if (gameType) {
+      <h2 class="game-page-title">{{ gameType.displayName }}</h2>
+    }
   </div>
 
   @if (errorMessage) {
@@ -15,35 +18,18 @@
   }
 
   @if (gameType) {
-    <h2>{{gameType.displayName}}</h2>
+  <div class="game-content">
 
-    <div class="game-content">
-
-      <aside class="game-sidebar">
-        <!-- temp start -->
-        @for (task of gameType.tasks; track task) {
-          <button (click)="setSelectedTask(task)"
-                  [class.solved]="isUserSolvedTask(task)"
-          >
-            {{ task.id }}
-          </button>
-        }
-        <button (click)="markAsSolved()">Mark as solved</button>
-        <!-- temp end -->
-
-        <!-- opcje gry -->
-      </aside>
-
-      <section class="game-board-area">
-        <!-- temp start -->
-        @if(selectedTask) {
-          <p>{{selectedTask.id}}</p>
-        }
-        <!-- temp end -->
-        <!-- plansza / układanka -->
-      </section>
-
+    <div class="main-stage-area">
+      <app-puzzle-board [gameType]="gameType"></app-puzzle-board>
+      <!-- main Stage -->
     </div>
+
+    <div class="task-catalogue-area">
+      <!-- catalogue Stage -->
+    </div>
+
+  </div>
   }
 
 </div>

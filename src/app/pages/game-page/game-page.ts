@@ -6,13 +6,14 @@ import { AuthService } from '../../services/auth-service';
 import { GameService } from '../../services/game-service';
 import { UserService } from '../../services/user-service';
 import { GuestProgressService } from '../../services/guest-progress-service';
+import { PuzzleBoard } from '../../components/puzzle-board/puzzle-board'
 
 import { GameType } from '../../models/game-type';
 import { Task } from '../../models/task';
 
 @Component({
   selector: 'app-game-page',
-  imports: [RouterLink],
+  imports: [RouterLink, PuzzleBoard],
   templateUrl: './game-page.html',
   styleUrl: './game-page.css',
 })

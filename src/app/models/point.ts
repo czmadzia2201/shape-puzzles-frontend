@@ -1,4 +1,6 @@
+import { CoordinateValue } from './coordinate-value';
+
 export interface Point {
-  x: number;
-  y: number;
+  x: CoordinateValue;
+  y: CoordinateValue;
 }

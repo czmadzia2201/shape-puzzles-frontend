@@ -1,0 +1,47 @@
+<div #stageWrapper class="main-stage-wrapper" [style.height.px]="mainStageDisplayHeight">
+  <ko-stage [config]="mainStageConfig">
+    <ko-layer>
+
+      <ko-line [config]="basePieceConfig"></ko-line>
+      <ko-rect [config]="mainTaskAreaConfig"></ko-rect>
+
+    </ko-layer>
+  </ko-stage>
+
+  <div
+    class="game-controls"
+    [style.left.px]="controlsLeft"
+    [style.top.px]="controlsTop"
+    [style.width.px]="controlsWidth">
+
+    <div class="controls-instructions">
+      <div class="controls-keys">
+        <span>←</span>
+        <span>→</span>
+        <span>↑</span>
+      </div>
+
+      <div class="controls-actions">
+        <span>Rotate left</span>
+        <span>Rotate right</span>
+        <span>Flip</span>
+      </div>
+    </div>
+
+    <button type="button" class="game-control-button">
+      Reset
+    </button>
+
+    <button type="button" class="game-control-button">
+      Verify solution
+    </button>
+  </div>
+</div>
+
+<div class="catalog-stage-wrapper">
+  <ko-stage [config]="catalogStageConfig">
+    <ko-layer>
+      <ko-rect [config]="catalogBackgroundConfig"></ko-rect>
+    </ko-layer>
+  </ko-stage>
+</div>
