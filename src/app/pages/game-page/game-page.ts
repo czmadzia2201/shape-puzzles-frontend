@@ -28,9 +28,9 @@ export class GamePage {
   gameTypeName: string | null = null;
   gameType: GameType | null = null;
   errorMessage: string | null = null;
-  selectedTask: Task | null = null;
   username = this.authService.username;
-  solvedTasks: Task[] = [];
+  solvedTaskIds = new Set<string>();
+  taskFinished = false;
 
   constructor() {
     effect(() => {
@@ -60,45 +60,45 @@ export class GamePage {
     }
   }
 
-  setSelectedTask(task: Task): void {
-    this.selectedTask = task;
-  }
-
-  isUserSolvedTask(task: Task): boolean {
-    return this.solvedTasks.some(solvedTask => solvedTask.id === task.id);
-  }
-
-  markAsSolved(): void {
-    if (!this.selectedTask) {
-      return;
-    }
-    this.userService.validateAndSaveSolution(this.selectedTask.id).subscribe(response =>{
-      if (response && !this.isUserSolvedTask(this.selectedTask!)) {
-        this.solvedTasks.push(this.selectedTask!);
+  markAsSolved(selectedTask: Task): void {
+    this.userService.validateAndSaveSolution(selectedTask.id).subscribe(response =>{
+      if (response && !this.solvedTaskIds.has(selectedTask.id)) {
+        this.solvedTaskIds = new Set(this.solvedTaskIds);
+        this.solvedTaskIds.add(selectedTask.id);
+        this.taskFinished = true;
       }
       if (response && !this.username()) {
-        this.guestProgressService.addToSolvedTasks(this.selectedTask!.id);
+        this.guestProgressService.addToSolvedTasks(selectedTask.id);
+        this.taskFinished = true;
       }
     });
   }
 
+  startTask(): void {
+    this.taskFinished = false;
+  }
+
   private loadSolvedTasks(): void {
     if (!this.gameTypeName) {
-      this.solvedTasks = [];
+      this.solvedTaskIds = new Set<string>();
       return;
     }
 
     if (!this.username()) {
       if (this.gameType) {
         const allSolvedTaskIds = this.guestProgressService.getSolvedTasks();
-        this.solvedTasks = this.gameType.tasks
-          .filter(task => allSolvedTaskIds.has(task.id));
+
+        this.solvedTaskIds = new Set(
+          this.gameType.tasks
+            .filter(task => allSolvedTaskIds.has(task.id))
+            .map(task => task.id)
+        );
       }
       return;
     }
 
     this.userService.findUserSolvedTasks(this.gameTypeName).subscribe(response => {
-      this.solvedTasks = response;
+      this.solvedTaskIds = new Set(response.map(task => task.id));
     });
 
   }

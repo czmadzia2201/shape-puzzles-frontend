@@ -1,0 +1,23 @@
+<dialog #dialog>
+
+  <div class="dialog-backdrop">
+    <div class="dialog-window auth-dialog">
+
+      <h2>Reset current progress?</h2>
+      <p>Your current progress will be lost. Do you want to continue?</p>
+
+      <div class="dialog-actions">
+        <button type="button"
+                class="dialog-button confirm-button"
+                (click)="reset()">
+          OK
+        </button>
+        <button type="button"
+                class="dialog-button"
+                (click)="close()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</dialog>

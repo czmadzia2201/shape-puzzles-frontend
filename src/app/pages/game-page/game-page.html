@@ -19,16 +19,15 @@
 
   @if (gameType) {
   <div class="game-content">
-
     <div class="main-stage-area">
-      <app-puzzle-board [gameType]="gameType"></app-puzzle-board>
-      <!-- main Stage -->
+      <app-puzzle-board
+        [gameType]="gameType"
+        [solvedTaskIds]="solvedTaskIds"
+        [taskFinished]="taskFinished"
+        (verifyRequested)="markAsSolved($event)"
+        (taskStarted)="startTask()">
+      </app-puzzle-board>
     </div>
-
-    <div class="task-catalogue-area">
-      <!-- catalogue Stage -->
-    </div>
-
   </div>
   }
 

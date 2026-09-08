@@ -5,6 +5,20 @@
       <ko-line [config]="basePieceConfig"></ko-line>
       <ko-rect [config]="mainTaskAreaConfig"></ko-rect>
 
+      @if (selectedTaskConfig) {
+      <ko-group [config]="selectedTaskGroupConfig">
+        <ko-shape [config]="selectedTaskConfig"></ko-shape>
+      </ko-group>
+      }
+
+      @for (piece of pieceConfigs; track piece.id) {
+        <ko-line [config]="piece"
+                 (click)="selectPiece($event.event)"
+                 (dragstart)="selectPiece($event.event)"
+                 (dragmove)="snapPiece($event.event)"
+        ></ko-line>
+      }
+
     </ko-layer>
   </ko-stage>
 
@@ -28,11 +42,17 @@
       </div>
     </div>
 
-    <button type="button" class="game-control-button">
+    <button type="button"
+            class="game-control-button"
+            (click)="resetProgress()"
+            [disabled]="!piecesModified">
       Reset
     </button>
 
-    <button type="button" class="game-control-button">
+    <button type="button"
+            class="game-control-button"
+            (click)="requestVerification()"
+            [disabled]="!selectedTaskConfig">
       Verify solution
     </button>
   </div>
@@ -41,7 +61,19 @@
 <div class="catalog-stage-wrapper">
   <ko-stage [config]="catalogStageConfig">
     <ko-layer>
+
       <ko-rect [config]="catalogBackgroundConfig"></ko-rect>
+
+      @for (task of taskConfigs; track task.id) {
+      <ko-group [config]="task.groupConfig"
+                (click)="selectTaskRequested(task.task)"
+                (tap)="selectTask(task.task)">
+        <ko-shape [config]="task.shapeConfig"></ko-shape>
+      </ko-group>
+      }
+
     </ko-layer>
   </ko-stage>
 </div>
+
+<app-reset-progress-dialog #resetProgressDialog (resetConfirmed)="performReset()"></app-reset-progress-dialog>
