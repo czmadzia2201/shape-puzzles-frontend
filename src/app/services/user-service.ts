@@ -4,6 +4,8 @@ import { Observable, Subject } from 'rxjs';
 
 import { RegisterUserRequest, RegisterUserResponse } from '../models/register';
 import { SyncSolvedTasksRequest } from '../models/sync-solved-tasks';
+import { VerifySolutionRequest } from '../models/verify-solution-request';
+
 import { Task } from '../models/task';
 
 @Injectable({
@@ -19,9 +21,7 @@ export class UserService {
   constructor(private readonly http: HttpClient) {}
 
   register(request: RegisterUserRequest): Observable<RegisterUserResponse> {
-    return this.http.post<RegisterUserResponse>(this.apiUrl,
-      request
-    );
+    return this.http.post<RegisterUserResponse>(this.apiUrl, request);
   }
 
   deleteAccount(): Observable<void> {
@@ -37,8 +37,8 @@ export class UserService {
     return this.http.get<boolean>(this.apiUrl, { params });
   }
 
-  validateAndSaveSolution(taskId: string): Observable<boolean> {
-    return this.http.post<boolean>(`${this.apiUrl}/solved-tasks/${taskId}`, {});
+  validateAndSaveSolution(request: VerifySolutionRequest): Observable<boolean> {
+    return this.http.post<boolean>(`${this.apiUrl}/solved-tasks`, request);
   }
 
   findUserSolvedTasks(gameTypeName: string): Observable<Task[]> {

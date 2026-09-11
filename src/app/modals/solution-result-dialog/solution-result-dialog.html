@@ -1,0 +1,18 @@
+<dialog #dialog>
+  <div class="dialog-backdrop">
+    <div class="dialog-window auth-dialog">
+      <h2>{{ solutionResultMessages.title }}</h2>
+
+      <p>{{ solutionResultMessages.text }}</p>
+
+      <div class="dialog-actions">
+        <button type="button"
+                class="dialog-button confirm-button"
+                (click)="close()">
+          OK
+        </button>
+      </div>
+
+    </div>
+  </div>
+</dialog>

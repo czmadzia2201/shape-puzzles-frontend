@@ -14,6 +14,8 @@ export class GameSelectionPage {
 
   private readonly gameService = inject(GameService);
 
+  readonly availableGameTypes = new Set(['house']);
+
   gameTypes: GameTypeSummary[] | null = null;
 
   ngOnInit(): void {

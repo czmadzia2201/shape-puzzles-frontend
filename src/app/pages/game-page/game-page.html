@@ -24,7 +24,7 @@
         [gameType]="gameType"
         [solvedTaskIds]="solvedTaskIds"
         [taskFinished]="taskFinished"
-        (verifyRequested)="markAsSolved($event)"
+        (verifyRequested)="verifyAndSaveSolution($event)"
         (taskStarted)="startTask()">
       </app-puzzle-board>
     </div>
@@ -32,3 +32,5 @@
   }
 
 </div>
+
+<app-solution-result-dialog #solutionResultDialog [solutionResultMessages]="solutionResultMessages!"></app-solution-result-dialog>

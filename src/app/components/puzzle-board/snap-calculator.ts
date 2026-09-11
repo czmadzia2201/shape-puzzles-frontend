@@ -1,20 +1,16 @@
 import Konva from 'konva';
-
-export interface SnapPoint {
-  x: number;
-  y: number;
-}
+import { GeometryPoint } from '../../models/geometry-point'
 
 export interface SnapOffset {
   dx: number;
   dy: number;
 }
 
-export function getTransformedVertices(node: Konva.Line): SnapPoint[] {
+export function getTransformedVertices(node: Konva.Line): GeometryPoint[] {
   const points = node.points();
   const transform = node.getTransform();
 
-  const vertices: SnapPoint[] = [];
+  const vertices: GeometryPoint[] = [];
 
   for (let i = 0; i < points.length; i += 2) {
     vertices.push(
@@ -28,8 +24,8 @@ export function getTransformedVertices(node: Konva.Line): SnapPoint[] {
   return vertices;
 }
 
-export function flatPointsToSnapPoints(points: number[]): SnapPoint[] {
-  const result: SnapPoint[] = [];
+export function flatPointsToSnapPoints(points: number[]): GeometryPoint[] {
+  const result: GeometryPoint[] = [];
 
   for (let i = 0; i < points.length; i += 2) {
     result.push({
@@ -42,8 +38,8 @@ export function flatPointsToSnapPoints(points: number[]): SnapPoint[] {
 }
 
 export function findSnapOffset(
-  draggedPoints: SnapPoint[],
-  targetPoints: SnapPoint[],
+  draggedPoints: GeometryPoint[],
+  targetPoints: GeometryPoint[],
   snapDistance: number
 ): SnapOffset | null {
 

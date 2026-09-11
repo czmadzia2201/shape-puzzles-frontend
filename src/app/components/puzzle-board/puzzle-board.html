@@ -1,5 +1,5 @@
 <div #stageWrapper class="main-stage-wrapper" [style.height.px]="mainStageDisplayHeight">
-  <ko-stage [config]="mainStageConfig">
+  <ko-stage #mainStage [config]="mainStageConfig">
     <ko-layer>
 
       <ko-line [config]="basePieceConfig"></ko-line>
@@ -58,7 +58,7 @@
   </div>
 </div>
 
-<div class="catalog-stage-wrapper">
+<div class="catalog-stage-wrapper" [style.height.px]="catalogStageDisplayHeight">
   <ko-stage [config]="catalogStageConfig">
     <ko-layer>
 

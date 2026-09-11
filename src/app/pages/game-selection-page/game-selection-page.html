@@ -4,8 +4,10 @@
 
   <div class="game-type-list">
     @for (gameType of gameTypes; track gameType) {
-      <a class="game-type-button"
-         [routerLink]="['/', gameType.name]">
+      <button type="button" class="game-type-button"
+         [routerLink]="['/', gameType.name]"
+         [disabled]="!availableGameTypes.has(gameType.name)">
+
         <div class="game-type-icon">
           <img
             [src]="'puzzle-icons/' + gameType.name + '-min.png'"
@@ -14,10 +16,15 @@
         </div>
         <span class="game-type-name">
           {{ gameType.displayName }}
+          @if (!availableGameTypes.has(gameType.name)) {
+            <span><i>
+              (Coming soon!)
+            </i></span>
+          }
         </span>
 
         <i class="bi bi-chevron-right"></i>
-      </a>
+      </button>
     }
   </div>
 

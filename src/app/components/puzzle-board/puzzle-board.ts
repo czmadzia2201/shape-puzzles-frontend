@@ -4,10 +4,12 @@ import { CoreShapeComponent, StageComponent } from 'ng2-konva';
 
 import { CoordinateValue } from '../../models/coordinate-value';
 import { GameType } from '../../models/game-type';
+import { GeometryPoint } from '../../models/geometry-point'
 import { Point } from '../../models/point';
 import { Task } from '../../models/task';
+import { PiecePlacement, VerifySolutionRequest } from '../../models/verify-solution-request';
 import { ResetProgressDialog } from '../../modals/reset-progress-dialog/reset-progress-dialog';
-import { findSnapOffset, flatPointsToSnapPoints, getTransformedVertices, SnapPoint } from './snap-calculator';
+import { findSnapOffset, flatPointsToSnapPoints, getTransformedVertices } from './snap-calculator';
 
 @Component({
   selector: 'app-puzzle-board',
@@ -23,6 +25,9 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
   @ViewChild('resetProgressDialog')
   resetProgressDialog!: ResetProgressDialog;
 
+  @ViewChild('mainStage')
+  mainStage!: StageComponent;
+
   @Input({ required: true })
   gameType!: GameType;
 
@@ -33,7 +38,7 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
   taskFinished = false;
 
   @Output()
-  verifyRequested = new EventEmitter<Task>();
+  verifyRequested = new EventEmitter<VerifySolutionRequest>();
 
   @Output()
   taskStarted = new EventEmitter<void>();
@@ -54,8 +59,12 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
   private readonly minScale = 0.85;
   private readonly snapDistance = 10;
 
+  private readonly taskIconSize = 80;
+  private readonly taskColumns = 12;
+
   private currentScale = 1;
   mainStageDisplayHeight = this.mainStageHeight;
+  catalogStageDisplayHeight = this.catalogStageHeight;
 
   pieceConfigs: any[] = [];
   selectedPiece: Konva.Line | null = null;
@@ -76,7 +85,7 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
 
   catalogStageConfig = {
     width: this.stageWidth,
-    height: this.catalogStageHeight,
+    height: this.catalogContentHeight,
     scaleX: 1,
     scaleY: 1
   };
@@ -98,7 +107,7 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
     x: 0,
     y: 0,
     width: this.stageWidth,
-    height: this.catalogStageHeight,
+    height: this.catalogContentHeight,
     fill: '#e6e6e6'
   };
 
@@ -123,6 +132,11 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
 
       this.pieceConfigs = this.createPieceConfigs();
       this.taskConfigs = this.createTaskIconConfigs();
+
+      this.catalogBackgroundConfig = {
+        ...this.catalogBackgroundConfig,
+        height: this.catalogContentHeight
+      };
     }
 
     if (changes['solvedTaskIds'] && !changes['gameType']) {
@@ -138,7 +152,8 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
     if (!this.selectedTask) {
       return;
     }
-    this.verifyRequested.emit(this.selectedTask);
+    const request = this.createVerifySolutionRequest();
+    this.verifyRequested.emit(request);
   }
 
   selectPiece(event: any): void {
@@ -219,7 +234,7 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
 
     const draggedPoints = getTransformedVertices(draggedNode);
 
-    const targetPoints: SnapPoint[] = [
+    const targetPoints: GeometryPoint[] = [
       ...flatPointsToSnapPoints(this.basePieceConfig.points)
     ];
 
@@ -256,7 +271,7 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
     }
   }
 
-  private getSelectedTaskSnapPoints(): SnapPoint[] {
+  private getSelectedTaskSnapPoints(): GeometryPoint[] {
     if (!this.selectedTask) {
       return [];
     }
@@ -280,6 +295,11 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
     });
   }
 
+  private get catalogContentHeight(): number {
+    const rows = Math.ceil(this.taskConfigs.length / this.taskColumns);
+    return Math.max(this.catalogStageHeight, rows * this.taskIconSize);
+  }
+
   private createTaskIconConfigs(): any[] {
     return this.gameType.tasks.map((task, index) => {
       const fillColor = this.solvedTaskIds.has(task.id) ? '#666' : 'white';
@@ -294,18 +314,15 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
   }
 
   private createTaskIconGroupConfig(taskId: string, index: number) {
-    const iconSize = 80;
     const iconScale = 0.15;
-    const columns = 12;
-
-    let rowsBefore = Math.floor(index / columns);
-    let columnsBefore = index % columns;
+    let rowsBefore = Math.floor(index / this.taskColumns);
+    let columnsBefore = index % this.taskColumns;
 
     return {
       id: taskId,
       name: 'task-icon',
-      x: iconSize / 2 + columnsBefore * iconSize,
-      y: iconSize / 2 + rowsBefore * iconSize,
+      x: this.taskIconSize / 2 + columnsBefore * this.taskIconSize,
+      y: this.taskIconSize / 2 + rowsBefore * this.taskIconSize,
       scaleX: iconScale,
       scaleY: iconScale
     };
@@ -389,7 +406,7 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
 
     this.catalogStageConfig = {
       width: this.stageWidth * scale,
-      height: this.catalogStageHeight * scale,
+      height: this.catalogContentHeight * scale,
       scaleX: scale,
       scaleY: scale
     };
@@ -397,6 +414,7 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
     this.controlsLeft = this.controlsLogicalX * scale;
     this.controlsTop = this.controlsLogicalY * scale;
     this.mainStageDisplayHeight = this.mainStageHeight * scale;
+    this.catalogStageDisplayHeight = this.catalogStageHeight * scale;
     this.currentScale = scale;
 
     const controlsAvailableWidth = (this.mainTaskAreaConfig.x - this.controlsLogicalX) * scale;
@@ -404,6 +422,48 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
       this.controlsMinWidth,
       Math.min(this.controlsMaxWidth, controlsAvailableWidth)
     );
+  }
+
+  createVerifySolutionRequest(): VerifySolutionRequest {
+    return {
+      taskId: this.selectedTask!.id,
+      taskPolygons: this.getCurrentTaskVertices(),
+      pieces: this.getCurrentPieceVertices()
+    }
+  }
+
+  private getCurrentPieceVertices(): PiecePlacement[] {
+    return this.mainStage
+      .getStage()
+      .find('.piece')
+      .map(node => {
+        const piece = node as Konva.Line;
+
+        return {
+          id: piece.id(),
+          vertices: getTransformedVertices(piece)
+        };
+      });
+  }
+
+  private getCurrentTaskVertices(): GeometryPoint[][] {
+    if (!this.selectedTask) {
+      return [];
+    }
+
+    const taskX = this.selectedTaskGroupConfig.x ?? 0;
+    const taskY = this.selectedTaskGroupConfig.y ?? 0;
+
+    return this.selectedTask.polygons.map(polygon => {
+      const points = flatPointsToSnapPoints(
+        this.toKonvaPoints(polygon, this.gameType.unitSize)
+      );
+
+      return points.map(point => ({
+        x: point.x + taskX,
+        y: point.y + taskY
+      }));
+    });
   }
 
   private coordinateToNumber(coordinate: CoordinateValue): number {
