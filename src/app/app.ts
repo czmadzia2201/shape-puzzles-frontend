@@ -1,5 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { RouterOutlet } from '@angular/router';
+
 import { AppHeader } from './components/app-header/app-header';
 import { UserService } from './services/user-service';
 import { AuthService } from './services/auth-service';
@@ -11,7 +13,6 @@ import { AuthService } from './services/auth-service';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('shape-puzzles-frontend');
 
   constructor(
     private readonly userService: UserService,
@@ -28,8 +29,10 @@ export class App {
     }
 
     this.userService.checkCurrentUser().subscribe({
-      error: () => {
-        // do nothing, we just need 401 for the interceptor to do its part
+      error: (error: HttpErrorResponse) => {
+        if (error.status === 404) {
+          this.authService.clearStorageData();
+        }
       }
     });
   }

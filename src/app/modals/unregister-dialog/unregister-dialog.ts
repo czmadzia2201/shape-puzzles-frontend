@@ -28,7 +28,7 @@ export class UnregisterDialog {
     this.userService.deleteAccount().subscribe(() => {
       this.authService.clearStorageData();
       this.close();
-    })
+    });
   }
 
 }

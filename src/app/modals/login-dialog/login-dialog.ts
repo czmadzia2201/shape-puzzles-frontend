@@ -34,27 +34,20 @@ export class LoginDialog {
     this.dialog.nativeElement.close();
   }
 
-  createEmptyLoginRequest(): LoginRequest {
-    return {
-      username: '',
-      password: ''
-    };
-  }
-
   sendLoginRequest(): void {
     this.loginError = null;
 
     this.authService.login(this.loginRequest).subscribe({
-      next: response => {
+      next: () => {
         this.syncSolvedTasks();
       },
-      error: error => {
+      error: () => {
         this.loginError = 'Invalid username or password.';
       }
     });
   }
 
-  syncSolvedTasks() {
+  private syncSolvedTasks() {
     const solvedTasks = this.guestProgressService.getSolvedTasks();
     if (solvedTasks.size === 0) {
       this.userService.notifySolvedTasksChanged();
@@ -75,6 +68,13 @@ export class LoginDialog {
         this.loginError = 'Error syncing solved tasks. Could not complete login. Try again.';
       }
     });
+  }
+
+  private createEmptyLoginRequest(): LoginRequest {
+    return {
+      username: '',
+      password: ''
+    };
   }
 
 }

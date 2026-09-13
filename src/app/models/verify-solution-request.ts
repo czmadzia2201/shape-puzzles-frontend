@@ -2,7 +2,6 @@ import { GeometryPoint } from './geometry-point';
 
 export interface VerifySolutionRequest {
   taskId: string;
-  taskPolygons: GeometryPoint[][];
   pieces: PiecePlacement[];
 }
 

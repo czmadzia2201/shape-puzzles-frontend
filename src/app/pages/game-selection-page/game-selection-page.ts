@@ -10,13 +10,13 @@ import { AboutDialog } from '../../modals/about-dialog/about-dialog'
   templateUrl: './game-selection-page.html',
   styleUrl: './game-selection-page.css',
 })
-export class GameSelectionPage {
+export class GameSelectionPage implements OnInit {
 
   private readonly gameService = inject(GameService);
 
   readonly availableGameTypes = new Set(['house']);
 
-  gameTypes: GameTypeSummary[] | null = null;
+  gameTypes: GameTypeSummary[] = [];
 
   ngOnInit(): void {
     this.gameService.getGameTypes().subscribe(response => {

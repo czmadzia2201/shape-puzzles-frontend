@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 
 import { LoginRequest, LoginResponse } from '../models/login';
@@ -20,11 +20,11 @@ export class AuthService {
 
   login(request: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, request).pipe(
-     tap(response => {
+      tap(response => {
        localStorage.setItem('accessToken', response.accessToken);
        localStorage.setItem('refreshToken', response.refreshToken);
        this.setLoggedInUser(request.username);
-     })
+      })
     );
   }
 
@@ -51,7 +51,7 @@ export class AuthService {
     this.username.set(null);
   }
 
-  setLoggedInUser(username: string): void {
+  private setLoggedInUser(username: string): void {
     localStorage.setItem('username', username);
     this.username.set(username);
   }

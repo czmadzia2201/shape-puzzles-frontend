@@ -9,9 +9,8 @@ import { GuestProgressService } from '../../services/guest-progress-service';
 import { PuzzleBoard } from '../../components/puzzle-board/puzzle-board'
 
 import { GameType } from '../../models/game-type';
-import { Task } from '../../models/task';
 import { VerifySolutionRequest } from '../../models/verify-solution-request';
-import { SolutionResultMessages, SOLUTION_CORRECT, SOLUTION_INCORRECT } from '../../models/solution-result';
+import { SolutionResultMessages, SOLUTION_CORRECT, SOLUTION_INCORRECT, SOLUTION_ERROR } from '../../models/solution-result';
 
 import { SolutionResultDialog } from '../../modals/solution-result-dialog/solution-result-dialog';
 
@@ -21,24 +20,26 @@ import { SolutionResultDialog } from '../../modals/solution-result-dialog/soluti
   templateUrl: './game-page.html',
   styleUrl: './game-page.css',
 })
-export class GamePage {
-  private route = inject(ActivatedRoute);
+export class GamePage implements OnInit {
+
+  @ViewChild('solutionResultDialog')
+  solutionResultDialog!: SolutionResultDialog;
+
+  private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
   private readonly gameService = inject(GameService);
   private readonly userService = inject(UserService);
   private readonly authService = inject(AuthService);
   private readonly guestProgressService = inject(GuestProgressService);
 
+  readonly username = this.authService.username;
+
   gameTypeName: string | null = null;
   gameType: GameType | null = null;
   errorMessage: string | null = null;
-  username = this.authService.username;
   solvedTaskIds = new Set<string>();
   taskFinished = false;
   solutionResultMessages: SolutionResultMessages | null = null;
-
-  @ViewChild('solutionResultDialog')
-  solutionResultDialog!: SolutionResultDialog;
 
   constructor() {
     effect(() => {
@@ -69,21 +70,27 @@ export class GamePage {
   }
 
   verifyAndSaveSolution(request: VerifySolutionRequest): void {
-    this.userService.validateAndSaveSolution(request).subscribe(response =>{
-      if (response) {
-        if (!this.solvedTaskIds.has(request.taskId)) {
-          this.solvedTaskIds = new Set(this.solvedTaskIds);
-          this.solvedTaskIds.add(request.taskId);
-        }
-        if (!this.username()) {
-          this.guestProgressService.addToSolvedTasks(request.taskId);
-        }
+    this.userService.validateAndSaveSolution(request).subscribe({
+      next: response => {
+        if (response) {
+          if (!this.solvedTaskIds.has(request.taskId)) {
+            this.solvedTaskIds = new Set(this.solvedTaskIds);
+            this.solvedTaskIds.add(request.taskId);
+          }
+          if (!this.username()) {
+            this.guestProgressService.addToSolvedTasks(request.taskId);
+          }
           this.taskFinished = true;
           this.solutionResultMessages = SOLUTION_CORRECT;
-      } else {
-        this.solutionResultMessages = SOLUTION_INCORRECT;
+        } else {
+          this.solutionResultMessages = SOLUTION_INCORRECT;
+        }
+        this.solutionResultDialog.open();
+      },
+      error: () => {
+        this.solutionResultMessages = SOLUTION_ERROR;
+        this.solutionResultDialog.open();
       }
-      this.solutionResultDialog.open();
     });
   }
 

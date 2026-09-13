@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, inject, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-reset-progress-dialog',
@@ -14,17 +14,26 @@ export class ResetProgressDialog {
   @Output()
   resetConfirmed = new EventEmitter<void>();
 
+  @Output()
+  resetCancelled = new EventEmitter<void>();
+
   open(): void {
     this.dialog.nativeElement.showModal();
-  }
-
-  close(): void {
-    this.dialog.nativeElement.close();
   }
 
   reset(): void {
     this.resetConfirmed.emit();
     this.close();
+  }
+
+  cancel(event?: Event): void {
+    event?.preventDefault();
+    this.resetCancelled.emit();
+    this.close();
+  }
+
+  private close(): void {
+    this.dialog.nativeElement.close();
   }
 
 }

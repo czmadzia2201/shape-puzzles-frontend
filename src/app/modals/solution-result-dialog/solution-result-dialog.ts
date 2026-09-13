@@ -13,7 +13,7 @@ export class SolutionResultDialog {
   dialog!: ElementRef<HTMLDialogElement>;
 
   @Input({ required: true })
-  solutionResultMessages!: SolutionResultMessages;
+  solutionResultMessages: SolutionResultMessages | null = null;
 
   open(): void {
     this.dialog.nativeElement.showModal();

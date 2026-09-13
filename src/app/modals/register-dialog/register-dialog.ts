@@ -26,7 +26,6 @@ export class RegisterDialog {
   repeatPassword: string = '';
 
   usernameAvailable: boolean | null = null;
-  checkingUsername = false;
   private usernameCheckTimeout?: ReturnType<typeof setTimeout>;
 
   open(): void {
@@ -38,7 +37,6 @@ export class RegisterDialog {
     this.repeatPassword = '';
     this.registerError = null;
     this.usernameAvailable = null;
-    this.checkingUsername = false;
 
     if (this.usernameCheckTimeout) {
       clearTimeout(this.usernameCheckTimeout);
@@ -47,21 +45,14 @@ export class RegisterDialog {
     this.dialog.nativeElement.close();
   }
 
-  createEmptyRegisterRequest(): RegisterUserRequest {
-    return {
-      username: '',
-      password: ''
-    };
-  }
-
   sendRegisterRequest(): void {
     this.registerError = null;
 
     this.userService.register(this.registerRequest).subscribe({
-      next: response => {
-        this.syncSolvedTasks();
+      next: () => {
+        this.login();
       },
-      error: error => {
+      error: () => {
         this.registerError = 'Register error. Please try again.';
       }
     });
@@ -79,22 +70,36 @@ export class RegisterDialog {
     }
 
     this.usernameCheckTimeout = setTimeout(() => {
-      this.checkingUsername = true;
 
       this.userService.isUsernameAvailable(username).subscribe({
         next: available => {
-          this.usernameAvailable = available;
-          this.checkingUsername = false;
+          if (this.registerRequest.username === username) {
+            this.usernameAvailable = available;
+          }
         },
         error: () => {
           this.usernameAvailable = null;
-          this.checkingUsername = false;
         }
       });
     }, 400);
   }
 
-  syncSolvedTasks() {
+  private login(): void {
+    this.authService.login({
+      username: this.registerRequest.username,
+      password: this.registerRequest.password
+    }).subscribe({
+      next: () => {
+        this.syncSolvedTasks();
+      },
+      error: () => {
+        this.registerError =
+          'Your account was created successfully, but automatic login failed. Please use Login button to log in.';
+      }
+    });
+  }
+
+  private syncSolvedTasks() {
     const solvedTasks = this.guestProgressService.getSolvedTasks();
     if (solvedTasks.size === 0) {
       this.userService.notifySolvedTasksChanged();
@@ -115,6 +120,13 @@ export class RegisterDialog {
         this.registerError = 'Error syncing solved tasks. Your account was created successfully. Use Login button to log in.';
       }
     });
+  }
+
+  private createEmptyRegisterRequest(): RegisterUserRequest {
+    return {
+      username: '',
+      password: ''
+    };
   }
 
 }

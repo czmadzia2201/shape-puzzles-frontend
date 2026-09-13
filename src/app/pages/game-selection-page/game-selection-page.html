@@ -3,7 +3,7 @@
   <h2>Choose game type</h2>
 
   <div class="game-type-list">
-    @for (gameType of gameTypes; track gameType) {
+    @for (gameType of gameTypes; track gameType.name) {
       <button type="button" class="game-type-button"
          [routerLink]="['/', gameType.name]"
          [disabled]="!availableGameTypes.has(gameType.name)">

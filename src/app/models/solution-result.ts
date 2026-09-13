@@ -12,3 +12,8 @@ export const SOLUTION_INCORRECT: SolutionResultMessages = {
   title: 'Not quite yet',
   text: 'The pieces don\'t form the target shape correctly. Keep trying!',
 };
+
+export const SOLUTION_ERROR: SolutionResultMessages = {
+  title: 'Something went wrong',
+  text: 'We couldn’t verify your solution. Please try again.'
+};

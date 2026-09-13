@@ -67,7 +67,7 @@
       @for (task of taskConfigs; track task.id) {
       <ko-group [config]="task.groupConfig"
                 (click)="selectTaskRequested(task.task)"
-                (tap)="selectTask(task.task)">
+                (tap)="selectTaskRequested(task.task)">
         <ko-shape [config]="task.shapeConfig"></ko-shape>
       </ko-group>
       }
@@ -76,4 +76,8 @@
   </ko-stage>
 </div>
 
-<app-reset-progress-dialog #resetProgressDialog (resetConfirmed)="performReset()"></app-reset-progress-dialog>
+<app-reset-progress-dialog
+    #resetProgressDialog
+    (resetConfirmed)="performReset()"
+    (resetCancelled)="cancelReset()">
+</app-reset-progress-dialog>
