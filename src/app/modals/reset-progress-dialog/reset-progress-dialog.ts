@@ -26,8 +26,8 @@ export class ResetProgressDialog {
     this.close();
   }
 
-  cancel(event?: Event): void {
-    event?.preventDefault();
+  cancel(event: Event): void {
+    event.preventDefault();
     this.resetCancelled.emit();
     this.close();
   }

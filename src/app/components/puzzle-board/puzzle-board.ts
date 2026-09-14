@@ -155,81 +155,10 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
     setTimeout(() => this.resizeStage());
   }
 
-  requestVerification(): void {
-    if (!this.selectedTask) {
-      return;
-    }
-    const request = this.createVerifySolutionRequest();
-    this.verifyRequested.emit(request);
-  }
-
   selectPiece(event: Konva.KonvaEventObject<Event>): void {
     const piece = event.target as Konva.Line;
     this.selectedPiece = piece;
     piece.moveToTop();
-  }
-
-  selectTaskRequested(task: Task): void {
-    if (this.piecesModified && !this.taskFinished && this.selectedTask) {
-      this.pendingTask = task;
-      this.resetProgressDialog.open();
-      return;
-    }
-    this.selectTask(task);
-  }
-
-  resetProgress(): void {
-    if (this.selectedTask && !this.taskFinished) {
-      this.resetProgressDialog.open();
-      return;
-    }
-    this.performReset();
-  }
-
-  performReset(): void {
-    this.restorePieces();
-    if (this.pendingTask) {
-      const task = this.pendingTask;
-      this.pendingTask = null;
-      this.selectTask(task);
-    }
-  }
-
-  cancelReset(): void {
-    this.pendingTask = null;
-  }
-
-  @HostListener('window:resize')
-  onResize(): void {
-    this.resizeStage();
-  }
-
-  @HostListener('document:keydown', ['$event'])
-  onKeyDown(event: KeyboardEvent): void {
-    if (!this.selectedPiece) {
-      return;
-    }
-
-    if (event.key === 'ArrowLeft') {
-      this.piecesModified = true;
-      this.selectedPiece.rotation(
-        this.selectedPiece.rotation() - 45
-      );
-    }
-
-    if (event.key === 'ArrowRight') {
-      this.piecesModified = true;
-      this.selectedPiece.rotation(
-        this.selectedPiece.rotation() + 45
-      );
-    }
-
-    if (event.key === 'ArrowUp') {
-      this.piecesModified = true;
-      this.selectedPiece.scaleX(
-        this.selectedPiece.scaleX() * -1
-      );
-    }
   }
 
   snapPiece(event: Konva.KonvaEventObject<Event>): void {
@@ -275,11 +204,111 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
     }
   }
 
-  private selectTask(task: Task): void {
-    this.selectedTask = task;
-    this.selectedTaskConfig = this.createTaskShapeConfig(task.polygons, 'white');
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent): void {
+    const target = event.target as HTMLElement;
+
+    if (!this.selectedPiece || target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+      return;
+    }
+
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      this.piecesModified = true;
+      this.selectedPiece.rotation(
+        this.selectedPiece.rotation() - 45
+      );
+    }
+
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      this.piecesModified = true;
+      this.selectedPiece.rotation(
+        this.selectedPiece.rotation() + 45
+      );
+    }
+
+    if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      this.piecesModified = true;
+      this.selectedPiece.scaleX(
+        this.selectedPiece.scaleX() * -1
+      );
+    }
+  }
+
+  selectTaskRequested(task: Task): void {
+    if (this.piecesModified && !this.taskFinished && this.selectedTask) {
+      this.pendingTask = task;
+      this.resetProgressDialog.open();
+      return;
+    }
+    this.selectTask(task);
+  }
+
+  resetProgress(): void {
+    if (this.selectedTask && !this.taskFinished) {
+      this.resetProgressDialog.open();
+      return;
+    }
+    this.performReset();
+  }
+
+  performReset(): void {
     this.restorePieces();
-    this.taskStarted.emit();
+    if (this.pendingTask) {
+      const task = this.pendingTask;
+      this.pendingTask = null;
+      this.selectTask(task);
+    }
+  }
+
+  cancelReset(): void {
+    this.pendingTask = null;
+  }
+
+  requestVerification(): void {
+    if (!this.selectedTask) {
+      return;
+    }
+    const request = this.createVerifySolutionRequest();
+    this.verifyRequested.emit(request);
+  }
+
+  @HostListener('window:resize')
+  onResize(): void {
+    this.resizeStage();
+  }
+
+  private createPieceConfigs(): Konva.LineConfig[] {
+    return this.gameType.pieces.map(piece => ({
+      id: piece.id,
+      name: 'piece',
+
+      x: this.coordinateToNumber(piece.startPoint.x) * this.gameType.unitSize,
+      y: this.coordinateToNumber(piece.startPoint.y) * this.gameType.unitSize,
+
+      points: this.toKonvaPoints(
+        piece.vertices,
+        this.gameType.unitSize
+      ),
+
+      closed: true,
+      fill: '#eef8ee',
+      stroke: '#2e7d32',
+      strokeWidth: 2,
+      draggable: true,
+
+      rotation: 0,
+      scaleX: 1,
+      scaleY: 1
+    }));
+  }
+
+  private restorePieces(): void {
+    this.pieceConfigs = this.createPieceConfigs();
+    this.selectedPiece = null;
+    this.piecesModified = false;
   }
 
   private getSelectedTaskSnapPoints(): GeometryPoint[] {
@@ -306,12 +335,14 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
     });
   }
 
-  private get catalogContentHeight(): number {
-    const rows = Math.ceil(this.taskConfigs.length / this.taskColumns);
-    return Math.max(this.catalogStageHeight, rows * this.taskIconSize);
+  private selectTask(task: Task): void {
+    this.selectedTask = task;
+    this.selectedTaskConfig = this.createTaskShapeConfig(task.polygons, 'white');
+    this.restorePieces();
+    this.taskStarted.emit();
   }
 
-  private createTaskIconConfigs(): any[] {
+  private createTaskIconConfigs(): TaskConfig[] {
     return this.gameType.tasks.map((task, index) => {
       const fillColor = this.solvedTaskIds.has(task.id) ? '#666' : 'white';
 
@@ -324,7 +355,7 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
     });
   }
 
-  private createTaskIconGroupConfig(taskId: string, index: number) {
+  private createTaskIconGroupConfig(taskId: string, index: number): Konva.GroupConfig {
     const iconScale = 0.15;
     const rowsBefore = Math.floor(index / this.taskColumns);
     const columnsBefore = index % this.taskColumns;
@@ -369,35 +400,37 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
     };
   }
 
-  private restorePieces(): void {
-    this.pieceConfigs = this.createPieceConfigs();
-    this.selectedPiece = null;
-    this.piecesModified = false;
+  private createVerifySolutionRequest(): VerifySolutionRequest {
+    return {
+      taskId: this.selectedTask!.id,
+      pieces: this.getCurrentPieceVertices()
+    };
   }
 
-  private createPieceConfigs(): any[] {
-    return this.gameType.pieces.map(piece => ({
-      id: piece.id,
-      name: 'piece',
+  private getCurrentPieceVertices(): PiecePlacement[] {
+    const taskX = this.selectedTaskGroupConfig.x ?? 0;
+    const taskY = this.selectedTaskGroupConfig.y ?? 0;
+    const unitSize = this.gameType.unitSize;
 
-      x: this.coordinateToNumber(piece.startPoint.x) * this.gameType.unitSize,
-      y: this.coordinateToNumber(piece.startPoint.y) * this.gameType.unitSize,
+    return this.mainStage
+      .getStage()
+      .find('.piece')
+      .map(node => {
+        const piece = node as Konva.Line;
 
-      points: this.toKonvaPoints(
-        piece.vertices,
-        this.gameType.unitSize
-      ),
+        return {
+          id: piece.id(),
+          vertices: getTransformedVertices(piece).map(point => ({
+            x: (point.x - taskX) / unitSize,
+            y: (point.y - taskY) / unitSize
+          }))
+        };
+      });
+  }
 
-      closed: true,
-      fill: '#eef8ee',
-      stroke: '#2e7d32',
-      strokeWidth: 2,
-      draggable: true,
-
-      rotation: 0,
-      scaleX: 1,
-      scaleY: 1
-    }));
+  private get catalogContentHeight(): number {
+    const rows = Math.ceil(this.taskConfigs.length / this.taskColumns);
+    return Math.max(this.catalogStageHeight, rows * this.taskIconSize);
   }
 
   private resizeStage(): void {
@@ -435,45 +468,17 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
     );
   }
 
-  private createVerifySolutionRequest(): VerifySolutionRequest {
-    return {
-      taskId: this.selectedTask!.id,
-      pieces: this.getCurrentPieceVertices()
-    };
-  }
-
-  private getCurrentPieceVertices(): PiecePlacement[] {
-    const taskX = this.selectedTaskGroupConfig.x ?? 0;
-    const taskY = this.selectedTaskGroupConfig.y ?? 0;
-    const unitSize = this.gameType.unitSize;
-
-    return this.mainStage
-      .getStage()
-      .find('.piece')
-      .map(node => {
-        const piece = node as Konva.Line;
-
-        return {
-          id: piece.id(),
-          vertices: getTransformedVertices(piece).map(point => ({
-            x: (point.x - taskX) / unitSize,
-            y: (point.y - taskY) / unitSize
-          }))
-        };
-      });
+  private toKonvaPoints(points: Point[], unitSize: number): number[] {
+    return points.flatMap(point => [
+      this.coordinateToNumber(point.x) * unitSize,
+      this.coordinateToNumber(point.y) * unitSize
+    ]);
   }
 
   private coordinateToNumber(coordinate: CoordinateValue): number {
     return (coordinate.constant ?? 0)
       + (coordinate.sqrt2 ?? 0) * Math.sqrt(2)
       + (coordinate.sqrt3 ?? 0) * Math.sqrt(3);
-  }
-
-  private toKonvaPoints(points: Point[], unitSize: number): number[] {
-    return points.flatMap(point => [
-      this.coordinateToNumber(point.x) * unitSize,
-      this.coordinateToNumber(point.y) * unitSize
-    ]);
   }
 
 }

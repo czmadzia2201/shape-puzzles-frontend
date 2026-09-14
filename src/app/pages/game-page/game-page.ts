@@ -6,7 +6,7 @@ import { AuthService } from '../../services/auth-service';
 import { GameService } from '../../services/game-service';
 import { UserService } from '../../services/user-service';
 import { GuestProgressService } from '../../services/guest-progress-service';
-import { PuzzleBoard } from '../../components/puzzle-board/puzzle-board'
+import { PuzzleBoard } from '../../components/puzzle-board/puzzle-board';
 
 import { GameType } from '../../models/game-type';
 import { VerifySolutionRequest } from '../../models/verify-solution-request';
@@ -37,6 +37,7 @@ export class GamePage implements OnInit {
   gameTypeName: string | null = null;
   gameType: GameType | null = null;
   errorMessage: string | null = null;
+  errorCode: number | null = null;
   solvedTaskIds = new Set<string>();
   taskFinished = false;
   solutionResultMessages: SolutionResultMessages | null = null;
@@ -62,8 +63,9 @@ export class GamePage implements OnInit {
           this.gameType = response;
           this.loadSolvedTasks();
         },
-        error: error => {
-          this.errorMessage = error.error.message;
+        error: (error: HttpErrorResponse) => {
+          this.errorCode = error.status;
+          this.errorMessage = error.error?.message ?? error.message;
         }
       });
     }

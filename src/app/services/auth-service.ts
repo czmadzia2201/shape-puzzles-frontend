@@ -21,18 +21,18 @@ export class AuthService {
   login(request: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, request).pipe(
       tap(response => {
-       localStorage.setItem('accessToken', response.accessToken);
-       localStorage.setItem('refreshToken', response.refreshToken);
-       this.setLoggedInUser(request.username);
+        localStorage.setItem('accessToken', response.accessToken);
+        localStorage.setItem('refreshToken', response.refreshToken);
+        this.setLoggedInUser(request.username);
       })
     );
   }
 
   refresh(request: RefreshRequest): Observable<RefreshResponse> {
     return this.http.post<RefreshResponse>(`${this.apiUrl}/refresh`, request).pipe(
-     tap(response => {
-       localStorage.setItem('accessToken', response.accessToken);
-     })
+      tap(response => {
+        localStorage.setItem('accessToken', response.accessToken);
+      })
     );
   }
 

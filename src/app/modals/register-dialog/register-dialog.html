@@ -1,4 +1,4 @@
-<dialog #dialog>
+<dialog #dialog (cancel)="cancel($event)">
 
   <div class="dialog-backdrop">
     <div class="dialog-window auth-dialog">
@@ -77,7 +77,7 @@
 
           <button type="button"
                   class="dialog-button"
-                  (click)="close()">
+                  (click)="cancel($event)">
             Cancel
           </button>
         </div>

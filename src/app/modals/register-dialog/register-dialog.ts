@@ -3,8 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth-service';
 import { UserService } from '../../services/user-service';
 import { GuestProgressService } from '../../services/guest-progress-service';
-import { SyncSolvedTasksRequest } from '../../models/sync-solved-tasks'
-import { RegisterUserRequest } from '../../models/register'
+import { SyncSolvedTasksRequest } from '../../models/sync-solved-tasks';
+import { RegisterUserRequest } from '../../models/register';
 
 @Component({
   selector: 'app-register-dialog',
@@ -32,17 +32,9 @@ export class RegisterDialog {
     this.dialog.nativeElement.showModal();
   }
 
-  close(): void {
-    this.registerRequest = this.createEmptyRegisterRequest();
-    this.repeatPassword = '';
-    this.registerError = null;
-    this.usernameAvailable = null;
-
-    if (this.usernameCheckTimeout) {
-      clearTimeout(this.usernameCheckTimeout);
-      this.usernameCheckTimeout = undefined;
-    }
-    this.dialog.nativeElement.close();
+  cancel(event: Event): void {
+    event.preventDefault();
+    this.close();
   }
 
   sendRegisterRequest(): void {
@@ -78,10 +70,25 @@ export class RegisterDialog {
           }
         },
         error: () => {
-          this.usernameAvailable = null;
+          if (this.registerRequest.username === username) {
+            this.usernameAvailable = null;
+          }
         }
       });
     }, 400);
+  }
+
+  private close(): void {
+    this.registerRequest = this.createEmptyRegisterRequest();
+    this.repeatPassword = '';
+    this.registerError = null;
+    this.usernameAvailable = null;
+
+    if (this.usernameCheckTimeout) {
+      clearTimeout(this.usernameCheckTimeout);
+      this.usernameCheckTimeout = undefined;
+    }
+    this.dialog.nativeElement.close();
   }
 
   private login(): void {
@@ -99,7 +106,7 @@ export class RegisterDialog {
     });
   }
 
-  private syncSolvedTasks() {
+  private syncSolvedTasks(): void {
     const solvedTasks = this.guestProgressService.getSolvedTasks();
     if (solvedTasks.size === 0) {
       this.userService.notifySolvedTasksChanged();
@@ -115,7 +122,7 @@ export class RegisterDialog {
         this.userService.notifySolvedTasksChanged();
         this.close();
       },
-      error: error => {
+      error: () => {
         this.authService.clearStorageData();
         this.registerError = 'Error syncing solved tasks. Your account was created successfully. Use Login button to log in.';
       }

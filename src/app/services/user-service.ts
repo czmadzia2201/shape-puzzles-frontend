@@ -5,7 +5,6 @@ import { Observable, Subject } from 'rxjs';
 import { RegisterUserRequest, RegisterUserResponse } from '../models/register';
 import { SyncSolvedTasksRequest } from '../models/sync-solved-tasks';
 import { VerifySolutionRequest } from '../models/verify-solution-request';
-
 import { Task } from '../models/task';
 
 @Injectable({

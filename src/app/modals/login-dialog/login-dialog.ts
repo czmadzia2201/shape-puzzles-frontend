@@ -3,8 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth-service';
 import { UserService } from '../../services/user-service';
 import { GuestProgressService } from '../../services/guest-progress-service';
-import { SyncSolvedTasksRequest } from '../../models/sync-solved-tasks'
-import { LoginRequest } from '../../models/login'
+import { SyncSolvedTasksRequest } from '../../models/sync-solved-tasks';
+import { LoginRequest } from '../../models/login';
 
 @Component({
   selector: 'app-login-dialog',
@@ -28,10 +28,9 @@ export class LoginDialog {
     this.dialog.nativeElement.showModal();
   }
 
-  close(): void {
-    this.loginRequest = this.createEmptyLoginRequest();
-    this.loginError = null;
-    this.dialog.nativeElement.close();
+  cancel(event: Event): void {
+    event.preventDefault();
+    this.close();
   }
 
   sendLoginRequest(): void {
@@ -47,7 +46,13 @@ export class LoginDialog {
     });
   }
 
-  private syncSolvedTasks() {
+  private close(): void {
+    this.loginRequest = this.createEmptyLoginRequest();
+    this.loginError = null;
+    this.dialog.nativeElement.close();
+  }
+
+  private syncSolvedTasks(): void {
     const solvedTasks = this.guestProgressService.getSolvedTasks();
     if (solvedTasks.size === 0) {
       this.userService.notifySolvedTasksChanged();
@@ -63,7 +68,7 @@ export class LoginDialog {
         this.userService.notifySolvedTasksChanged();
         this.close();
       },
-      error: error => {
+      error: () => {
         this.authService.clearStorageData();
         this.loginError = 'Error syncing solved tasks. Could not complete login. Try again.';
       }

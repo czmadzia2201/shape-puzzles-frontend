@@ -1,5 +1,5 @@
 import Konva from 'konva';
-import { GeometryPoint } from '../../models/geometry-point'
+import { GeometryPoint } from '../../models/geometry-point';
 
 export interface SnapOffset {
   dx: number;
