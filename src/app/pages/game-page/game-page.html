@@ -1,12 +1,19 @@
 <div class="game-panel game-page">
 
   <div class="game-page-header">
-    <button routerLink="/" class="back-button">
-      <i class="bi bi-arrow-left"></i> Back
-    </button>
+    <div class="game-page-header-actions">
+      <button routerLink="/" class="back-button">
+        <i class="bi bi-arrow-left"></i> Back
+      </button>
+      @if (gameType) {
+        <button type="button" class="about-game-type-button" (click)="aboutGameTypeDialog.open()">
+          About {{ gameType.displayName }}
+        </button>
+      }
+    </div>
 
     @if (gameType) {
-      <h2 class="game-page-title">{{ gameType.displayName }}</h2>
+      <h2>{{ gameType.displayName }}</h2>
     }
   </div>
 
@@ -34,3 +41,4 @@
 </div>
 
 <app-solution-result-dialog #solutionResultDialog [solutionResultMessages]="solutionResultMessages"></app-solution-result-dialog>
+<app-about-game-type-dialog #aboutGameTypeDialog [gameType]="gameType"></app-about-game-type-dialog>

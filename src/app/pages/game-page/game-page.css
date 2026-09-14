@@ -17,26 +17,33 @@
 }
 
 .game-page-header {
-  display: grid;
-  grid-template-columns: 90px 1fr 90px;
+  position: relative;
+  display: flex;
   align-items: center;
+  min-height: 40px;
   width: calc(100% - 40px);
   margin: 0 auto;
-  min-height: 40px;
+}
+
+.game-page-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .game-page-header h2 {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   margin: 0;
 }
 
-.game-page-title {
-  grid-column: 2;
-  margin: 0;
-  text-align: center;
+.about-game-type-button {
+  width: 150px;
+  white-space: nowrap;
 }
 
 .back-button {
-  grid-column: 1;
   min-width: 90px;
 }
 

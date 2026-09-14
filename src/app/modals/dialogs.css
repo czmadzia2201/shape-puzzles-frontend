@@ -32,6 +32,12 @@
   width: min(100%, 800px);
 }
 
+.about-content {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
 p, li {
   color: #666;
   font-size: 14px;
@@ -52,15 +58,12 @@ p {
 .dialog-button {
   min-width: 100px;
   padding: 8px 14px;
-
   border: 1px solid #bbb;
   border-radius: 8px;
   background: #fff;
-
-  cursor: pointer;
 }
 
-.dialog-button:hover {
+.dialog-button:hover:not(:disabled) {
   background: #f0f0f0;
 }
 
@@ -70,7 +73,7 @@ p {
   color: #256429;
 }
 
-.confirm-button:hover {
+.confirm-button:hover:not(:disabled) {
   background: #e2f2e2;
 }
 

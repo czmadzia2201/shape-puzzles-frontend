@@ -44,19 +44,9 @@ h2 {
   color: #222;
   text-decoration: none;
 
-  cursor: pointer;
-
   transition:
     background-color 120ms ease,
     border-color 120ms ease;
-}
-
-.game-type-button:hover:not(:disabled) {
-  background: #f0f0f0;
-}
-
-.game-type-button:disabled {
-  cursor: default;
 }
 
 .game-type-icon {

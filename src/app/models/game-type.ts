@@ -12,4 +12,5 @@ export interface GameType extends GameTypeSummary {
   tasks: Task[];
   baseShape: Point[];
   unitSize: number;
+  description: string;
 }

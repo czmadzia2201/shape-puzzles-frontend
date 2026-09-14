@@ -1,4 +1,5 @@
 import { Component, DestroyRef, effect, inject, OnInit, ViewChild } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
@@ -13,10 +14,11 @@ import { VerifySolutionRequest } from '../../models/verify-solution-request';
 import { SolutionResultMessages, SOLUTION_CORRECT, SOLUTION_INCORRECT, SOLUTION_ERROR } from '../../models/solution-result';
 
 import { SolutionResultDialog } from '../../modals/solution-result-dialog/solution-result-dialog';
+import { AboutGameTypeDialog } from '../../modals/about-game-type-dialog/about-game-type-dialog';
 
 @Component({
   selector: 'app-game-page',
-  imports: [RouterLink, PuzzleBoard, SolutionResultDialog],
+  imports: [RouterLink, PuzzleBoard, SolutionResultDialog, AboutGameTypeDialog],
   templateUrl: './game-page.html',
   styleUrl: './game-page.css',
 })
@@ -24,6 +26,9 @@ export class GamePage implements OnInit {
 
   @ViewChild('solutionResultDialog')
   solutionResultDialog!: SolutionResultDialog;
+
+  @ViewChild('aboutGameTypeDialog')
+  aboutGameTypeDialog!: AboutGameTypeDialog;
 
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);

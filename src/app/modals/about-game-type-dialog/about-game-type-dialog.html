@@ -1,0 +1,19 @@
+<dialog #dialog>
+  <div class="dialog-backdrop">
+    <div class="dialog-window about-dialog">
+      @if (gameType) {
+        <h1>{{ gameType.displayName }}</h1>
+        <div class="about-content" [innerHTML]="gameType.description">
+        </div>
+      }
+      <div class="dialog-actions">
+        <button type="button"
+                class="dialog-button confirm-button"
+                (click)="close()">
+          OK
+        </button>
+      </div>
+
+    </div>
+  </div>
+</dialog>
