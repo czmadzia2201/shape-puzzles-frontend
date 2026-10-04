@@ -23,6 +23,7 @@
 
 .game-controls {
   position: absolute;
+  transform: translateX(-50%);
   width: 160px;
   display: flex;
   flex-direction: column;
@@ -49,8 +50,10 @@
 }
 
 .game-control-button {
-  width: 160px;
+  width: 100%;
+  min-width: max-content;
   height: 34px;
+  white-space: nowrap;
   border: 1px solid #ccc;
   border-radius: 8px;
   background: white;

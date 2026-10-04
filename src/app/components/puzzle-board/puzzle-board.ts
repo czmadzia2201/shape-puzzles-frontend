@@ -57,13 +57,12 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
   private readonly controlsMaxWidth = 160;
   private readonly controlsMinWidth = 120;
 
-  private readonly controlsLogicalX = 40;
   private readonly controlsLogicalY = 300;
 
   private readonly stageWidth = 1000;
-  private readonly mainStageHeight = 480;
+  private readonly mainStageHeight = 540;
   private readonly catalogStageHeight = 160;
-  private readonly minScale = 0.85;
+  private readonly minScale = 0.64;
   private readonly snapDistance = 10;
 
   private readonly taskIconSize = 80;
@@ -101,7 +100,7 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
     x: 275,
     y: 0,
     width: 725,
-    height: 480,
+    height: 540,
     fill: '#e6e6e6'
   };
 
@@ -455,13 +454,16 @@ export class PuzzleBoard implements AfterViewInit, OnChanges {
       scaleY: scale
     };
 
-    this.controlsLeft = this.controlsLogicalX * scale;
     this.controlsTop = this.controlsLogicalY * scale;
     this.mainStageDisplayHeight = this.mainStageHeight * scale;
     this.catalogStageDisplayHeight = this.catalogStageHeight * scale;
     this.currentScale = scale;
 
-    const controlsAvailableWidth = (this.mainTaskAreaConfig.x - this.controlsLogicalX) * scale;
+    const baseShapeXs = this.basePieceConfig.points.filter((_, index) => index % 2 === 0);
+    const baseShapeLeft = Math.min(...baseShapeXs) + this.basePieceConfig.x;
+    const baseShapeRight = Math.max(...baseShapeXs) + this.basePieceConfig.x;
+    const controlsAvailableWidth = (baseShapeRight - baseShapeLeft) * scale;
+    this.controlsLeft = (baseShapeLeft + baseShapeRight) / 2 * scale;
     this.controlsWidth = Math.max(
       this.controlsMinWidth,
       Math.min(this.controlsMaxWidth, controlsAvailableWidth)
