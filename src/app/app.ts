@@ -9,8 +9,7 @@ import { AuthService } from './services/auth-service';
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, AppHeader],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  templateUrl: './app.html'
 })
 export class App {
 
