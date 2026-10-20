@@ -9,7 +9,7 @@ import { GameType, GameTypeSummary } from '../models/game-type';
 })
 export class GameService {
 
-  private readonly apiUrl = 'http://localhost:8080/shape-puzzles/game-types';
+  private readonly apiUrl = 'http://localhost:8080/shape-puzzles/api/game-types';
 
   constructor(private readonly http: HttpClient) {}
 

@@ -14,7 +14,7 @@ export class AuthService {
     localStorage.getItem('username')
   );
 
-  private readonly apiUrl = 'http://localhost:8080/shape-puzzles/auth';
+  private readonly apiUrl = 'http://localhost:8080/shape-puzzles/api/auth';
 
   constructor(private readonly http: HttpClient) {}
 

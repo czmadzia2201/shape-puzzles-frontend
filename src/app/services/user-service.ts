@@ -15,7 +15,7 @@ export class UserService {
   private solvedTasksChanged = new Subject<void>();
   solvedTasksChanged$ = this.solvedTasksChanged.asObservable();
 
-  private readonly apiUrl = 'http://localhost:8080/shape-puzzles/users';
+  private readonly apiUrl = 'http://localhost:8080/shape-puzzles/api/users';
 
   constructor(private readonly http: HttpClient) {}
 
