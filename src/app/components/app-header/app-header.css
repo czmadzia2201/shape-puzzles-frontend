@@ -13,8 +13,22 @@
   gap: 20px;
 }
 
-h1 {
-  flex-shrink: 0;
+.side-panel-heading {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.back-link {
+  color: #666;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.back-link:hover,
+.back-link:focus-visible {
+  text-decoration: underline;
 }
 
 .header-actions {
