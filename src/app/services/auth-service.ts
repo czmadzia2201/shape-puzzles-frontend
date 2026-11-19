@@ -4,6 +4,7 @@ import { Observable, tap } from 'rxjs';
 
 import { LoginRequest, LoginResponse } from '../models/login';
 import { RefreshRequest, RefreshResponse } from '../models/refresh';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class AuthService {
     localStorage.getItem('username')
   );
 
-  private readonly apiUrl = 'http://localhost:8080/shape-puzzles/api/auth';
+  private readonly apiUrl =  environment.apiUrl + '/auth';
 
   constructor(private readonly http: HttpClient) {}
 

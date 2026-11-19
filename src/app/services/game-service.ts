@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { GameType, GameTypeSummary } from '../models/game-type';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GameService {
 
-  private readonly apiUrl = 'http://localhost:8080/shape-puzzles/api/game-types';
+  private readonly apiUrl = environment.apiUrl + '/game-types';
 
   constructor(private readonly http: HttpClient) {}
 

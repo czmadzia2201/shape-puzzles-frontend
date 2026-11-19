@@ -6,6 +6,7 @@ import { RegisterUserRequest, RegisterUserResponse } from '../models/register';
 import { SyncSolvedTasksRequest } from '../models/sync-solved-tasks';
 import { VerifySolutionRequest } from '../models/verify-solution-request';
 import { Task } from '../models/task';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,7 @@ export class UserService {
   private solvedTasksChanged = new Subject<void>();
   solvedTasksChanged$ = this.solvedTasksChanged.asObservable();
 
-  private readonly apiUrl = 'http://localhost:8080/shape-puzzles/api/users';
+  private readonly apiUrl = environment.apiUrl + '/users';
 
   constructor(private readonly http: HttpClient) {}
 

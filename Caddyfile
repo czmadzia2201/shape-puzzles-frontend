@@ -1,0 +1,16 @@
+
+{
+    auto_https off
+}
+
+:{$PORT:3000} {
+    encode gzip
+
+    redir /shape-puzzles /shape-puzzles/ 308
+
+    handle_path /shape-puzzles/* {
+        root * /app/dist/shape-puzzles-frontend/browser
+        try_files {path} /index.html
+        file_server
+    }
+}
