@@ -64,7 +64,7 @@ button:disabled {
 
   width: 100%;
   max-width: 1200px;
-  min-height: 100vh;
+  min-height: calc(100vh - 30px);
 
   margin: 0 auto;
   padding: 18px;
@@ -87,5 +87,30 @@ button:disabled {
   .game-layout {
     gap: 12px;
     padding: 10px;
+  }
+}
+
+.page-link {
+  color: #666;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.page-link:hover,
+.page-link:focus-visible {
+  text-decoration: underline;
+}
+
+.game-footer {
+  width: min(calc(100% - 36px), 1164px);
+  margin: 0 auto;
+  padding-bottom: 8px;
+  border-top: 1px solid #ddd;
+  text-align: center;
+}
+
+@media (max-width: 560px) {
+  .game-footer {
+    width: calc(100% - 20px);
   }
 }
