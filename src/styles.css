@@ -1,5 +1,19 @@
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
+:root {
+  --border-color: #ddd;
+  --button-border-color: #bbb;
+}
+
+app-game-page,
+app-game-selection-page,
+app-not-found-page {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
 html,
 body {
   margin: 0;
@@ -41,7 +55,7 @@ h3 {
 
 button {
   padding: 8px 12px;
-  border: 1px solid #bbb;
+  border: 1px solid var(--button-border-color);
   border-radius: 8px;
   background: #fff;
   color: #222;
@@ -64,17 +78,17 @@ button:disabled {
 
   width: 100%;
   max-width: 1200px;
-  min-height: 100vh;
+  min-height: calc(100vh - 30px);
 
   margin: 0 auto;
-  padding: 18px;
+  padding: 18px 18px 12px;
 }
 
 .header-panel,
 .game-panel {
   width: 100%;
   background: #fff;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   border-radius: 14px;
 }
 
@@ -87,5 +101,30 @@ button:disabled {
   .game-layout {
     gap: 12px;
     padding: 10px;
+  }
+}
+
+.page-link {
+  color: #666;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.page-link:hover,
+.page-link:focus-visible {
+  text-decoration: underline;
+}
+
+.game-footer {
+  width: min(calc(100% - 36px), 1164px);
+  margin: 0 auto;
+  padding-bottom: 8px;
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+}
+
+@media (max-width: 560px) {
+  .game-footer {
+    width: calc(100% - 20px);
   }
 }
