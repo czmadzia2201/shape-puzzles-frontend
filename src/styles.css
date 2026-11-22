@@ -1,3 +1,5 @@
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
 :root {
   --border-color: #ddd;
   --button-border-color: #bbb;
@@ -11,8 +13,6 @@ app-not-found-page {
   min-height: 0;
   width: 100%;
 }
-
-@import "bootstrap-icons/font/bootstrap-icons.css";
 
 html,
 body {
