@@ -67,7 +67,7 @@ button:disabled {
   min-height: calc(100vh - 30px);
 
   margin: 0 auto;
-  padding: 18px;
+  padding: 18px 18px 12px;
 }
 
 .header-panel,
