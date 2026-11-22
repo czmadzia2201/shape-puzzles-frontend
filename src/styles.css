@@ -3,6 +3,7 @@
 :root {
   --border-color: #ddd;
   --button-border-color: #bbb;
+  --cookie-banner-right: max(38px, calc((100vw - 1200px) / 2 + 38px));
 }
 
 app-game-page,
@@ -98,6 +99,10 @@ button:disabled {
 }
 
 @media (max-width: 560px) {
+  :root {
+    --cookie-banner-right: 30px;
+  }
+
   .game-layout {
     gap: 12px;
     padding: 10px;
@@ -116,11 +121,27 @@ button:disabled {
 }
 
 .game-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
   width: min(calc(100% - 36px), 1164px);
   margin: 0 auto;
   padding-bottom: 8px;
   border-top: 1px solid var(--border-color);
   text-align: center;
+}
+
+.game-footer button.page-link {
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.game-footer button.page-link:hover {
+  background: none;
 }
 
 @media (max-width: 560px) {
